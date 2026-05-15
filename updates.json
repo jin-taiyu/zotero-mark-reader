@@ -1,0 +1,19 @@
+{
+  "addons": {
+    "zotero-mark-reader@jin-taiyu.github.io": {
+      "updates": [
+        {
+          "version": "0.1.0",
+          "update_link": "https://github.com/jin-taiyu/zotero-mark-reader/releases/download/v0.1.0/zotero-mark-reader-0.1.0.xpi",
+          "update_hash": "sha256:b479e0bf8e1898a345c789c3d709ad0d419225511da7193d7906c09040ec2ae1",
+          "applications": {
+            "zotero": {
+              "strict_min_version": "8.0",
+              "strict_max_version": "10.0.*"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

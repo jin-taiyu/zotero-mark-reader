@@ -1,0 +1,20 @@
+{
+  "manifest_version": 2,
+  "name": "Zotero Mark Reader",
+  "version": "0.1.0",
+  "description": "使用 MinerU 解析 PDF，并在 Zotero 阅读器中交互式选择 Markdown 段落。",
+  "homepage_url": "https://github.com/jin-taiyu/zotero-mark-reader",
+  "author": "winsking",
+  "icons": {
+    "48": "content/icons/icon.svg",
+    "96": "content/icons/icon.svg"
+  },
+  "applications": {
+    "zotero": {
+      "id": "zotero-mark-reader@jin-taiyu.github.io",
+      "update_url": "https://raw.githubusercontent.com/jin-taiyu/zotero-mark-reader/main/updates.json",
+      "strict_min_version": "8.0",
+      "strict_max_version": "10.0.*"
+    }
+  }
+}

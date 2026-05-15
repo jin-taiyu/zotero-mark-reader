@@ -1,0 +1,13 @@
+.DS_Store
+.tools/
+build/
+dist/
+node_modules/
+output/
+*.log
+*.xpi
+*.zip
+*.tmp
+.env
+.env.*
+!*.env.example

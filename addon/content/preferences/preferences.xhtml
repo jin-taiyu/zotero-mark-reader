@@ -1,0 +1,291 @@
+<linkset>
+  <html:style>
+    @namespace html "http://www.w3.org/1999/xhtml";
+
+    .zmr-pref-row {
+      gap: 8px;
+      margin-block: 4px;
+      max-width: 640px;
+    }
+
+    .zmr-pref-row > label {
+      min-width: 7.5em;
+    }
+
+    .zmr-pref-row > menulist,
+    .zmr-pref-row > html|input {
+      max-width: 32em;
+      min-width: 0;
+      width: 32em;
+    }
+
+    .zmr-pref-row > html|input {
+      box-sizing: border-box;
+    }
+
+    .zmr-pref-checkboxes {
+      gap: 16px;
+      margin-top: 4px;
+    }
+
+    .zmr-prompt-row {
+      align-items: flex-start;
+      max-width: 760px;
+    }
+
+    .zmr-prompt-editor {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .zmr-prompt-template {
+      box-sizing: border-box;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      line-height: 1.45;
+      min-height: 220px;
+      resize: vertical;
+      width: 100%;
+    }
+
+    .zmr-prompt-template.is-locked {
+      color: var(--fill-secondary);
+      cursor: default;
+    }
+
+    .zmr-pref-note {
+      color: var(--fill-secondary);
+      line-height: 1.45;
+      margin: 0;
+    }
+
+    [data-mineru-hidden="true"] {
+      display: none;
+    }
+
+    .zmr-validation-status {
+      margin-inline-start: 8px;
+    }
+
+    .zmr-validation-status[data-state="success"] {
+      color: var(--accent-green);
+    }
+
+    .zmr-validation-status[data-state="error"] {
+      color: var(--accent-red);
+    }
+  </html:style>
+</linkset>
+
+<vbox
+  id="zotero-mark-reader-prefpane"
+  onload="Zotero_Preferences.ZoteroMarkReaderPreferences.init(this)"
+>
+  <vbox class="main-section">
+    <groupbox aria-labelledby="zmr-mineru-title">
+      <label><html:h2 id="zmr-mineru-title">MinerU 解析</html:h2></label>
+
+      <hbox align="center" class="zmr-pref-row">
+        <label value="解析服务" control="zmr-mineru-mode"/>
+        <menulist
+          id="zmr-mineru-mode"
+          preference="extensions.zotero.zoteroMarkReader.mineru.mode"
+          native="true"
+          flex="1"
+        >
+          <menupopup>
+            <menuitem label="MinerU 在线API" value="cloud"/>
+            <menuitem label="本地 MinerU API" value="local"/>
+          </menupopup>
+        </menulist>
+      </hbox>
+
+      <hbox align="center" class="zmr-pref-row" id="zmr-mineru-base-url-row">
+        <label value="接口地址" control="zmr-mineru-base-url"/>
+        <html:input
+          id="zmr-mineru-base-url"
+          preference="extensions.zotero.zoteroMarkReader.mineru.baseURL"
+          flex="1"
+        />
+      </hbox>
+
+      <hbox
+        align="center"
+        class="zmr-pref-row"
+        data-mineru-hidden="true"
+        data-mineru-mode-only="cloud"
+        hidden="true"
+        id="zmr-mineru-token-row"
+      >
+        <label value="API Token" control="zmr-mineru-token"/>
+        <html:input
+          id="zmr-mineru-token"
+          preference="extensions.zotero.zoteroMarkReader.mineru.apiToken"
+          type="password"
+          autocomplete="off"
+          flex="1"
+        />
+      </hbox>
+
+      <hbox align="center" class="zmr-pref-row">
+        <label id="zmr-mineru-model-label" value="解析模型" control="zmr-mineru-model"/>
+        <menulist
+          id="zmr-mineru-model"
+          preference="extensions.zotero.zoteroMarkReader.mineru.modelVersion"
+          native="true"
+          flex="1"
+        >
+          <menupopup>
+            <menuitem label="VLM / 高精度" value="vlm"/>
+            <menuitem label="Pipeline / 兼容模式" value="pipeline"/>
+          </menupopup>
+        </menulist>
+      </hbox>
+
+      <hbox align="center" class="zmr-pref-row">
+        <label value="文档语言" control="zmr-mineru-language"/>
+        <menulist
+          id="zmr-mineru-language"
+          preference="extensions.zotero.zoteroMarkReader.mineru.language"
+          native="true"
+          flex="1"
+        >
+          <menupopup>
+            <menuitem label="中文（简体）" value="ch"/>
+            <menuitem label="English" value="en"/>
+            <menuitem label="日本語" value="japan"/>
+            <menuitem label="한국어" value="korean"/>
+            <menuitem label="中文（繁體）" value="chinese_cht"/>
+            <menuitem label="中文（服务端）" value="ch_server"/>
+            <menuitem label="中文（轻量）" value="ch_lite"/>
+            <menuitem label="Latin" value="latin"/>
+            <menuitem label="العربية" value="arabic"/>
+            <menuitem label="Cyrillic" value="cyrillic"/>
+            <menuitem label="East Slavic" value="east_slavic"/>
+            <menuitem label="Devanagari" value="devanagari"/>
+            <menuitem label="தமிழ்" value="ta"/>
+            <menuitem label="తెలుగు" value="te"/>
+            <menuitem label="ქართული" value="ka"/>
+            <menuitem label="ไทย" value="th"/>
+            <menuitem label="Ελληνικά" value="el"/>
+          </menupopup>
+        </menulist>
+      </hbox>
+
+      <hbox align="center" class="zmr-pref-checkboxes">
+        <checkbox
+          label="OCR"
+          preference="extensions.zotero.zoteroMarkReader.mineru.enableOCR"
+          native="true"
+        />
+        <checkbox
+          label="公式"
+          preference="extensions.zotero.zoteroMarkReader.mineru.enableFormula"
+          native="true"
+        />
+        <checkbox
+          label="表格"
+          preference="extensions.zotero.zoteroMarkReader.mineru.enableTable"
+          native="true"
+        />
+      </hbox>
+
+      <hbox align="center" class="preferences-button-group">
+        <button id="zmr-mineru-validate" label="验证 MinerU 接口"/>
+        <description
+          id="zmr-mineru-validation-status"
+          class="zmr-validation-status"
+        />
+      </hbox>
+    </groupbox>
+  </vbox>
+
+  <vbox class="main-section">
+    <groupbox aria-labelledby="zmr-llm-title">
+      <label><html:h2 id="zmr-llm-title">翻译模型</html:h2></label>
+
+      <hbox align="center" class="zmr-pref-row">
+        <label value="服务商" control="zmr-llm-provider"/>
+        <html:input
+          id="zmr-llm-provider"
+          preference="extensions.zotero.zoteroMarkReader.llm.provider"
+          flex="1"
+        />
+      </hbox>
+
+      <hbox align="center" class="zmr-pref-row">
+        <label value="接口地址" control="zmr-llm-base-url"/>
+        <html:input
+          id="zmr-llm-base-url"
+          preference="extensions.zotero.zoteroMarkReader.llm.baseURL"
+          flex="1"
+        />
+      </hbox>
+
+      <hbox align="center" class="zmr-pref-row">
+        <label value="API Key" control="zmr-llm-api-key"/>
+        <html:input
+          id="zmr-llm-api-key"
+          preference="extensions.zotero.zoteroMarkReader.llm.apiKey"
+          type="password"
+          autocomplete="off"
+          flex="1"
+        />
+      </hbox>
+
+      <hbox align="center" class="zmr-pref-row">
+        <label value="模型" control="zmr-llm-model"/>
+        <html:input
+          id="zmr-llm-model"
+          preference="extensions.zotero.zoteroMarkReader.llm.model"
+          flex="1"
+        />
+      </hbox>
+
+      <hbox align="center" class="zmr-pref-row">
+        <label value="目标语言" control="zmr-llm-language"/>
+        <menulist
+          id="zmr-llm-language"
+          preference="extensions.zotero.zoteroMarkReader.llm.targetLanguage"
+          native="true"
+          flex="1"
+        >
+          <menupopup>
+            <menuitem label="简体中文" value="简体中文"/>
+            <menuitem label="繁體中文" value="繁體中文"/>
+            <menuitem label="English" value="English"/>
+            <menuitem label="日本語" value="日本語"/>
+            <menuitem label="한국어" value="한국어"/>
+            <menuitem label="Français" value="Français"/>
+            <menuitem label="Deutsch" value="Deutsch"/>
+            <menuitem label="Español" value="Español"/>
+            <menuitem label="Português" value="Português"/>
+            <menuitem label="Italiano" value="Italiano"/>
+            <menuitem label="Русский" value="Русский"/>
+          </menupopup>
+        </menulist>
+      </hbox>
+
+      <hbox class="zmr-pref-row zmr-prompt-row">
+        <label value="提示词模板" control="zmr-llm-prompt"/>
+        <vbox class="zmr-prompt-editor">
+          <hbox class="preferences-button-group">
+            <button id="zmr-prompt-edit" label="编辑提示词"/>
+            <button id="zmr-prompt-reset" label="恢复默认"/>
+          </hbox>
+          <html:textarea
+            id="zmr-llm-prompt"
+            class="zmr-prompt-template is-locked"
+            readonly="readonly"
+            rows="12"
+          ></html:textarea>
+          <description class="zmr-pref-note">
+            {{target_language}} 表示目标语言，{{text}} 表示待翻译 Markdown。
+          </description>
+        </vbox>
+      </hbox>
+    </groupbox>
+  </vbox>
+</vbox>
