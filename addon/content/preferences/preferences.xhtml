@@ -76,6 +76,47 @@
     .zmr-validation-status[data-state="error"] {
       color: var(--accent-red);
     }
+
+    .zmr-advanced-details {
+      margin-top: 8px;
+      max-width: 760px;
+    }
+
+    .zmr-advanced-details > html|summary {
+      cursor: pointer;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .zmr-glossary-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .zmr-glossary-table-wrap {
+      max-height: 260px;
+      overflow: auto;
+    }
+
+    .zmr-glossary-table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    .zmr-glossary-table th,
+    .zmr-glossary-table td {
+      border-bottom: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+      padding: 5px;
+      text-align: start;
+    }
+
+    .zmr-glossary-table html|input[type="text"] {
+      box-sizing: border-box;
+      min-width: 90px;
+      width: 100%;
+    }
   </html:style>
 </linkset>
 
@@ -282,10 +323,123 @@
             rows="12"
           ></html:textarea>
           <description class="zmr-pref-note">
-            {{target_language}} 表示目标语言，{{text}} 表示待翻译 Markdown。
+            {{target_language}}、{{text}}、{{context}}、{{glossary}} 分别表示目标语言、待翻译 Markdown、智能上下文和术语表。
           </description>
         </vbox>
       </hbox>
+    </groupbox>
+  </vbox>
+
+  <vbox class="main-section">
+    <groupbox aria-labelledby="zmr-full-translation-title">
+      <label><html:h2 id="zmr-full-translation-title">全文翻译</html:h2></label>
+
+      <hbox align="center" class="zmr-pref-checkboxes">
+        <checkbox
+          label="启用 AI 智能上下文"
+          preference="extensions.zotero.zoteroMarkReader.translation.contextEnabled"
+          native="true"
+        />
+        <checkbox
+          label="自动生成并使用单篇 AI 术语"
+          preference="extensions.zotero.zoteroMarkReader.translation.autoDocumentGlossary"
+          native="true"
+        />
+        <checkbox
+          label="使用全局术语表"
+          preference="extensions.zotero.zoteroMarkReader.translation.useGlobalGlossary"
+          native="true"
+        />
+      </hbox>
+
+      <hbox align="center" class="zmr-pref-row">
+        <label value="领域专家" control="zmr-translation-expert"/>
+        <menulist
+          id="zmr-translation-expert"
+          preference="extensions.zotero.zoteroMarkReader.translation.expertMode"
+          native="true"
+          flex="1"
+        >
+          <menupopup>
+            <menuitem label="自动识别" value="auto"/>
+            <menuitem label="通用" value="general"/>
+            <menuitem label="学术" value="academic"/>
+            <menuitem label="技术" value="technical"/>
+            <menuitem label="法律" value="legal"/>
+            <menuitem label="医学" value="medical"/>
+            <menuitem label="自定义" value="custom"/>
+          </menupopup>
+        </menulist>
+      </hbox>
+
+      <hbox align="center" class="zmr-pref-row" id="zmr-translation-expert-custom-row">
+        <label value="专家指令" control="zmr-translation-expert-custom"/>
+        <html:input
+          id="zmr-translation-expert-custom"
+          preference="extensions.zotero.zoteroMarkReader.translation.expertCustom"
+          flex="1"
+        />
+      </hbox>
+
+      <html:details class="zmr-advanced-details" open="open">
+        <html:summary>全局术语表</html:summary>
+        <html:div class="zmr-glossary-toolbar">
+          <html:input id="zmr-global-glossary-search" type="search" placeholder="搜索术语"/>
+          <html:button id="zmr-global-glossary-add" type="button">添加</html:button>
+          <html:button id="zmr-global-glossary-import" type="button">导入</html:button>
+          <html:button id="zmr-global-glossary-export" type="button">导出</html:button>
+          <html:button id="zmr-global-glossary-save" type="button">保存术语表</html:button>
+        </html:div>
+        <html:div class="zmr-glossary-table-wrap">
+          <html:table class="zmr-glossary-table">
+            <html:thead>
+              <html:tr>
+                <html:th>启用</html:th>
+                <html:th>原文</html:th>
+                <html:th>译文</html:th>
+                <html:th>目标语言</html:th>
+                <html:th>备注</html:th>
+                <html:th></html:th>
+              </html:tr>
+            </html:thead>
+            <html:tbody id="zmr-global-glossary-body"></html:tbody>
+          </html:table>
+        </html:div>
+      </html:details>
+
+      <html:details class="zmr-advanced-details">
+        <html:summary>性能与可靠性</html:summary>
+        <hbox align="center" class="zmr-pref-row">
+          <label value="每批内容块" control="zmr-translation-batch-size"/>
+          <html:input
+            id="zmr-translation-batch-size"
+            preference="extensions.zotero.zoteroMarkReader.translation.batchSize"
+            type="number"
+            min="1"
+            max="12"
+          />
+        </hbox>
+        <hbox align="center" class="zmr-pref-row">
+          <label value="并发请求" control="zmr-translation-concurrency"/>
+          <html:input
+            id="zmr-translation-concurrency"
+            preference="extensions.zotero.zoteroMarkReader.translation.concurrency"
+            type="number"
+            min="1"
+            max="6"
+          />
+        </hbox>
+        <hbox align="center" class="zmr-pref-row">
+          <label value="失败重试" control="zmr-translation-retries"/>
+          <html:input
+            id="zmr-translation-retries"
+            preference="extensions.zotero.zoteroMarkReader.translation.maxRetries"
+            type="number"
+            min="0"
+            max="5"
+          />
+        </hbox>
+      </html:details>
     </groupbox>
   </vbox>
 </vbox>

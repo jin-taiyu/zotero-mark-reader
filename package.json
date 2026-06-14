@@ -1,6 +1,6 @@
 {
   "name": "zotero-mark-reader",
-  "version": "0.1.0",
+  "version": "0.1.1-beta.1",
   "description": "A Zotero plugin that parses PDFs with MinerU and overlays Markdown-aware paragraph boxes in the built-in reader.",
   "private": true,
   "license": "MIT",
