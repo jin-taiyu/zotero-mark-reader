@@ -21,6 +21,9 @@
 - 支持 MinerU 在线 API 与本地 `mineru-api`。
 - 在 Zotero PDF 阅读器顶部提供 **单击复制** 与 **单击翻译** 两种模式。
 - 翻译窗口支持 Markdown、公式渲染、流式输出。
+- 在 PDF 或父条目的右键菜单中启动 **全文翻译**，支持真实进度、暂停、继续、取消、失败重试与断点续翻。
+- 全文翻译支持 AI 智能上下文、领域专家、全局术语表和自动生成的单篇术语表。
+- 翻译缓存按目标语言、模型、提示词、上下文和术语配置保存多个版本，并实时同步到已打开的阅读器。
 
 <p align="center">
   <img src="docs/assets/reader-translation-demo.png" alt="Zotero Mark Reader 段落框与翻译窗口预览" width="900">
@@ -61,6 +64,8 @@ mineru-api --host 127.0.0.1 --port 8000
 插件设置保存在 Zotero 用户配置中，键名前缀为 `extensions.zotero.zoteroMarkReader.*`。卸载插件不会自动删除这些偏好项；重新安装后 Zotero 会继续读取原配置。
 
 解析结果保存在 Zotero profile 下的 `zotero-mark-reader/attachments/<attachment-key>/`，其中包含 `parse.json`、`full.md`、`raw/` 和可选的 `result.zip`。
+
+全文翻译结果、单篇上下文分析和单篇术语保存在同目录的 `translation-cache.json`。该文件独立于 `parse.json`，重新解析 PDF 或关闭翻译任务窗口不会丢失已经完成的译文。全局术语表保存在 Zotero 用户配置中。
 
 ## 官方资料
 
