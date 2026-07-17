@@ -1,3 +1,12 @@
+# v0.1.2-beta.1
+
+- Added source and translation editing with persistent saves in the paragraph translation window.
+- Added advanced paragraph retranslation using document analysis, neighboring paragraphs, expert mode, and configured glossaries.
+- Redesigned the advanced retranslation action with a ring-arrow and star icon using the standard action color.
+
+This is a prerelease intended for testing. The stable update channel remains
+on `v0.1.0`.
+
 # v0.1.1-beta.1
 
 - Added advanced full-text translation with document analysis and editable

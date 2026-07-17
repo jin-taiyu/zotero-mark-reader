@@ -171,6 +171,16 @@
   color: rgba(0, 0, 0, 0.86);
 }
 
+.zmr-popover-action[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--accent-blue, Highlight) 14%, transparent);
+  color: var(--accent-blue, Highlight);
+}
+
+.zmr-popover-action-save:not(:disabled) {
+  background: color-mix(in srgb, var(--accent-blue, Highlight) 14%, transparent);
+  color: var(--accent-blue, Highlight);
+}
+
 .zmr-popover-action:disabled {
   color: rgba(0, 0, 0, 0.24);
   cursor: default;
@@ -221,6 +231,31 @@
 
 .zmr-popover-body.is-loading {
   color: rgba(0, 0, 0, 0.58);
+}
+
+.zmr-popover-body.is-editing {
+  display: flex;
+  padding: 10px;
+}
+
+.zmr-popover-editor {
+  background: rgba(0, 0, 0, 0.018);
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  border-radius: 7px;
+  box-sizing: border-box;
+  color: inherit;
+  flex: 1;
+  font: 13px/1.58 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  min-height: 100%;
+  outline: none;
+  padding: 10px 12px;
+  resize: none;
+  width: 100%;
+}
+
+.zmr-popover-editor:focus {
+  border-color: var(--accent-blue, Highlight);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-blue, Highlight) 18%, transparent);
 }
 
 .zmr-translation-popover.is-error .zmr-popover-title {
