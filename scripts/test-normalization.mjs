@@ -66,6 +66,10 @@ assert.match(
 );
 assert.match(source, /await parseItems\(\[attachment\]\)/);
 assert.match(source, /await translateParagraphsForItems\(\[attachment\]\)/);
+assert.match(source, /onAdvancedRetranslate:[\s\S]*advanced: true/);
+assert.match(source, /onSaveSource:[\s\S]*saveBlockSource/);
+assert.match(source, /onSaveTranslation:[\s\S]*saveBlockTranslation/);
+assert.match(source, /setEditor\(value, options = \{\}\)/);
 
 const {
   markdownFromV2Item,
@@ -82,6 +86,8 @@ const {
   isTranslatableBlock,
   hasNaturalLanguage,
   blockContext,
+  translationGlossary,
+  advancedBlockTranslationDetails,
   normalizeGlossaryEntries,
   mergeGlossaries,
   filterGlossaryForTarget,
@@ -90,6 +96,7 @@ const {
   findCachedTranslation,
   storeCachedTranslation,
   migrateLegacyTranslations,
+  replaceBlockMarkdown,
   createTranslationBatches,
   parseBatchTranslations,
   parseJSONPayload,
@@ -270,6 +277,71 @@ assert.match(
   /Previous source block: Before/,
 );
 
+const advancedDetails = advancedBlockTranslationDetails(
+  {
+    blocks: [
+      { id: "before", type: "paragraph", markdown: "Before" },
+      { id: "current", type: "paragraph", markdown: "A model." },
+      { id: "after", type: "paragraph", markdown: "After" },
+    ],
+  },
+  {
+    glossary: {
+      ai: [{ source: "model", target: "AI 模型", enabled: true }],
+      manual: [{ source: "model", target: "人工模型", enabled: true }],
+    },
+  },
+  { id: "current", type: "paragraph", markdown: "A model." },
+  {
+    targetLanguage: "简体中文",
+    contextEnabled: true,
+    expertMode: "academic",
+    autoDocumentGlossary: true,
+    useGlobalGlossary: true,
+  },
+  { summary: "Summary" },
+  [{ source: "model", target: "全局模型", enabled: true }],
+);
+assert.match(advancedDetails.context, /Document summary: Summary/);
+assert.match(advancedDetails.context, /Previous source block: Before/);
+assert.match(advancedDetails.context, /Next source block: After/);
+assert.match(advancedDetails.context, /academic research expert/);
+assert.equal(advancedDetails.glossary[0].target, "人工模型");
+assert.match(
+  advancedBlockTranslationDetails(
+    { blocks: [{ id: "current", type: "paragraph", markdown: "Text" }] },
+    { glossary: { ai: [], manual: [] } },
+    { id: "current", type: "paragraph", markdown: "Text" },
+    {
+      targetLanguage: "简体中文",
+      contextEnabled: false,
+      expertMode: "technical",
+      autoDocumentGlossary: false,
+      useGlobalGlossary: false,
+    },
+    null,
+  ).context,
+  /technical documentation expert/,
+);
+
+assert.equal(
+  translationGlossary(
+    {
+      glossary: {
+        ai: [{ source: "term", target: "AI", enabled: true }],
+        manual: [{ source: "term", target: "人工", enabled: true }],
+      },
+    },
+    {
+      targetLanguage: "简体中文",
+      autoDocumentGlossary: true,
+      useGlobalGlossary: true,
+    },
+    [{ source: "term", target: "全局", enabled: true }],
+  )[0].target,
+  "人工",
+);
+
 const mergedGlossary = mergeGlossaries(
   [{ source: "model", target: "全局模型", enabled: true, origin: "global" }],
   [{ source: "model", target: "AI 模型", enabled: true, origin: "document-ai" }],
@@ -387,6 +459,28 @@ const reparsedCache = normalizeTranslationCache(
 );
 assert.deepEqual(Object.keys(reparsedCache.analyses), []);
 assert.equal(reparsedCache.entries["block-1"].version.markdown, "保留译文");
+
+const repeatedBlocks = [
+  { markdown: "Repeated" },
+  { markdown: "Middle" },
+  { markdown: "Repeated" },
+];
+assert.equal(
+  JSON.stringify(
+    replaceBlockMarkdown(
+      "Repeated\n\nMiddle\n\nRepeated",
+      repeatedBlocks,
+      2,
+      "Edited",
+    ),
+  ),
+  JSON.stringify({ markdown: "Repeated\n\nMiddle\n\nEdited", replaced: true }),
+);
+assert.equal(
+  replaceBlockMarkdown("Full document", [{ markdown: "Missing" }], 0, "Edited")
+    .replaced,
+  false,
+);
 
 const batches = createTranslationBatches(
   [
